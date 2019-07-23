@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,11 +18,17 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.eureka.common.security.JwtConfig;
 
+//import com.eureka.common.security.JwtConfig;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
     
+	@Autowired
+	private Environment env;
+	
+	@Autowired
 	private final JwtConfig jwtConfig;
 	
 	public JwtTokenAuthenticationFilter(JwtConfig jwtConfig) {
@@ -33,6 +41,7 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 		
 		// 1. get the authentication header. Tokens are supposed to be passed in the authentication header
 		String header = request.getHeader(jwtConfig.getHeader());
+		
 		
 		// 2. validate the header and check the prefix
 		if(header == null || !header.startsWith(jwtConfig.getPrefix())) {
@@ -48,7 +57,6 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 		
 		// 3. Get the token
 		String token = header.replace(jwtConfig.getPrefix(), "");
-//		System.out.println("ini adalah token : "+token);
 		try {	// exceptions might be thrown in creating the claims if for example the token is expired
 			
 			// 4. Validate the token
@@ -58,7 +66,7 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 					.getBody();
 			
 			String username = claims.getSubject();
-			System.out.println("ini usernamenya"+username);
+			System.out.println("USERNAME DI ZUUL = "+username);
 			
 			if(username != null) {
 				@SuppressWarnings("unchecked")
@@ -73,6 +81,8 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 				 // 6. Authenticate the user
 				 // Now, user is authenticated
 				 SecurityContextHolder.getContext().setAuthentication(auth);
+				 
+				 response.addHeader("Tokenku", token);
 			}
 			
 		} catch (Exception e) {
