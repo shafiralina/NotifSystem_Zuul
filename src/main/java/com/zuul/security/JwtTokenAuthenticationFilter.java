@@ -10,13 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.common.security.JwtConfig;
+import com.zuul.common.JwtConfig;
 
 //import com.eureka.common.security.JwtConfig;
 
@@ -25,8 +24,6 @@ import io.jsonwebtoken.Jwts;
 
 public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
     
-	@Autowired
-	private Environment env;
 	
 	@Autowired
 	private final JwtConfig jwtConfig;

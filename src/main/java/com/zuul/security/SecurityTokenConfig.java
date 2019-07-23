@@ -12,7 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.common.security.JwtConfig;
+import com.zuul.common.JwtConfig;
+
 
 //import com.eureka.common.security.JwtConfig;
 
