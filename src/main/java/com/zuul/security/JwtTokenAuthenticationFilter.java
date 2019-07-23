@@ -1,4 +1,4 @@
-package com.eureka.zuul.security;
+package com.zuul.security;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.eureka.common.security.JwtConfig;
+import com.common.security.JwtConfig;
 
 //import com.eureka.common.security.JwtConfig;
 
@@ -66,7 +66,6 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 					.getBody();
 			
 			String username = claims.getSubject();
-			System.out.println("USERNAME DI ZUUL = "+username);
 			
 			if(username != null) {
 				@SuppressWarnings("unchecked")
@@ -82,7 +81,7 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 				 // Now, user is authenticated
 				 SecurityContextHolder.getContext().setAuthentication(auth);
 				 
-				 response.addHeader("Tokenku", token);
+//				 response.addHeader("Tokenku", token);
 			}
 			
 		} catch (Exception e) {

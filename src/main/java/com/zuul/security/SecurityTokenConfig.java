@@ -1,4 +1,4 @@
-package com.eureka.zuul.security;
+package com.zuul.security;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.eureka.common.security.JwtConfig;
+import com.common.security.JwtConfig;
 
 //import com.eureka.common.security.JwtConfig;
 
@@ -41,7 +41,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 		   // allow all who are accessing "auth" service
 		   .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()  
 		   // must be an admin if trying to access admin area (authentication is also required here)
-		   .antMatchers("/gallery" + "/admin/**").hasRole("ADMIN")
+//		   .antMatchers("/gallery" + "/admin/**").hasRole("ADMIN")
 		   // Any other request must be authenticated
 		   .anyRequest().authenticated(); 
 	}
