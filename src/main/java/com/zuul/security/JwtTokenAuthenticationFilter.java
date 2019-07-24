@@ -2,6 +2,7 @@ package com.zuul.security;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
@@ -28,10 +29,13 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 	@Autowired
 	private final JwtConfig jwtConfig;
 	
+	
 	public JwtTokenAuthenticationFilter(JwtConfig jwtConfig) {
 		this.jwtConfig = jwtConfig;
 	}
-
+	
+	String username;
+	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
@@ -54,6 +58,9 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 		
 		// 3. Get the token
 		String token = header.replace(jwtConfig.getPrefix(), "");
+		
+		
+        
 		try {	// exceptions might be thrown in creating the claims if for example the token is expired
 			
 			// 4. Validate the token
@@ -62,7 +69,7 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 					.parseClaimsJws(token)
 					.getBody();
 			
-			String username = claims.getSubject();
+			username = claims.getSubject();
 			
 			if(username != null) {
 				@SuppressWarnings("unchecked")
@@ -78,7 +85,6 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 				 // Now, user is authenticated
 				 SecurityContextHolder.getContext().setAuthentication(auth);
 				 
-//				 response.addHeader("Tokenku", token);
 			}
 			
 		} catch (Exception e) {
@@ -86,8 +92,15 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 			SecurityContextHolder.clearContext();
 		}
 		
+		//add token and username to header request for interception
+		HttpServletRequest req = (HttpServletRequest) request;
+        HeaderMapRequestWrapper requestWrapper = new HeaderMapRequestWrapper(req);
+        requestWrapper.addHeader("token_addr", token);
+        requestWrapper.addHeader("user_addr", username);
+        
+        
 		// go to the next filter in the filter chain
-		chain.doFilter(request, response);
+		chain.doFilter(requestWrapper, response);
 	}
 
 }

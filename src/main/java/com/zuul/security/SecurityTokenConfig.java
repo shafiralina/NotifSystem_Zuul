@@ -21,9 +21,6 @@ import com.zuul.common.JwtConfig;
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtConfig jwtConfig;
- 
-	@Autowired
-	private Environment env;
 	
 	@Override
   	protected void configure(HttpSecurity http) throws Exception {
@@ -40,11 +37,12 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 		// authorization requests config
 		.authorizeRequests()
 		   // allow all who are accessing "auth" service
-		   .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()  
+		.antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
+		.antMatchers(HttpMethod.POST, "/api/notifsystem/save/device").permitAll()
 		   // must be an admin if trying to access admin area (authentication is also required here)
 //		   .antMatchers("/gallery" + "/admin/**").hasRole("ADMIN")
 		   // Any other request must be authenticated
-		   .anyRequest().authenticated(); 
+		.anyRequest().authenticated(); 
 	}
 	
 	@Bean
