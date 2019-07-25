@@ -1,6 +1,7 @@
 package com.zuul.security;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,9 +17,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.zuul.common.JwtConfig;
-
-//import com.eureka.common.security.JwtConfig;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -59,6 +60,15 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 		// 3. Get the token
 		String token = header.replace(jwtConfig.getPrefix(), "");
 		
+		//add token and username to header request for interception
+		HttpServletRequest req = (HttpServletRequest) request;
+        HeaderMapRequestWrapper requestWrapper = new HeaderMapRequestWrapper(req);
+        
+        HashMap<String, Object> result1 = new HashMap<>();
+        result1 = new ObjectMapper().readValue(requestWrapper.getBody(), HashMap.class);
+        username = result1.get("userId").toString();
+        requestWrapper.addHeader("token_addr", token);
+        requestWrapper.addHeader("user_addr", username);
 		
         
 		try {	// exceptions might be thrown in creating the claims if for example the token is expired
@@ -69,8 +79,8 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 					.parseClaimsJws(token)
 					.getBody();
 			
-			username = claims.getSubject();
-			
+//			username = claims.getSubject();
+			System.out.println("INI USERNAME YANG MASUK = "+username);
 			if(username != null) {
 				@SuppressWarnings("unchecked")
 				List<String> authorities = (List<String>) claims.get("authorities");
@@ -92,11 +102,8 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 			SecurityContextHolder.clearContext();
 		}
 		
-		//add token and username to header request for interception
-		HttpServletRequest req = (HttpServletRequest) request;
-        HeaderMapRequestWrapper requestWrapper = new HeaderMapRequestWrapper(req);
-        requestWrapper.addHeader("token_addr", token);
-        requestWrapper.addHeader("user_addr", username);
+	
+		
         
         
 		// go to the next filter in the filter chain
