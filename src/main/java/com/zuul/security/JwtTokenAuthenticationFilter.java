@@ -36,6 +36,7 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 	}
 	
 	String username;
+	String userId;
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -63,12 +64,12 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 		//add token and username to header request for interception
 		HttpServletRequest req = (HttpServletRequest) request;
         HeaderMapRequestWrapper requestWrapper = new HeaderMapRequestWrapper(req);
-        
+//        
         HashMap<String, Object> result1 = new HashMap<>();
         result1 = new ObjectMapper().readValue(requestWrapper.getBody(), HashMap.class);
-        username = result1.get("userId").toString();
+        userId = result1.get("userId").toString();
         requestWrapper.addHeader("token_addr", token);
-        requestWrapper.addHeader("user_addr", username);
+        requestWrapper.addHeader("user_addr", userId);
 		
         
 		try {	// exceptions might be thrown in creating the claims if for example the token is expired
@@ -79,8 +80,8 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 					.parseClaimsJws(token)
 					.getBody();
 			
-//			username = claims.getSubject();
-			System.out.println("INI USERNAME YANG MASUK = "+username);
+			username = claims.getSubject();
+//			System.out.println("INI USERNAME YANG MASUK = "+username);
 			if(username != null) {
 				@SuppressWarnings("unchecked")
 				List<String> authorities = (List<String>) claims.get("authorities");
