@@ -1,4 +1,4 @@
-package com.eureka.zuul.tests;
+package com.zuul.tests;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
