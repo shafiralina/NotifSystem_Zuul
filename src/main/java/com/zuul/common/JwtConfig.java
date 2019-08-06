@@ -25,11 +25,11 @@ public class JwtConfig {
 	@Value("${security.jwt.prefix:Bearer }")
 	private String prefix;
 
-	@Value("${security.jwt.expiration:#{60}}")
-	private int expiration1;
+//	@Value("${security.jwt.expiration:#{60}}")
+//	private int expiration1;
 
-	@Value("${security.jwt.expiration:#{120}}")
-	private int expiration2;
+//	@Value("${security.jwt.expiration:#{120}}")
+//	private int expiration2;
 
 	@Value("${security.jwt.secret:JwtSecretKey}")
 	private String secret;
@@ -51,21 +51,21 @@ public class JwtConfig {
 		this.prefix = prefix;
 	}
 
-	public int getExpiration1() {
-		return expiration1;
-	}
-
-	public void setExpiration1(int expiration1) {
-		this.expiration1 = expiration1;
-	}
-
-	public int getExpiration2() {
-		return expiration2;
-	}
-
-	public void setExpiration2(int expiration2) {
-		this.expiration2 = expiration2;
-	}
+//	public int getExpiration1() {
+//		return expiration1;
+//	}
+//
+//	public void setExpiration1(int expiration1) {
+//		this.expiration1 = expiration1;
+//	}
+//
+//	public int getExpiration2() {
+//		return expiration2;
+//	}
+//
+//	public void setExpiration2(int expiration2) {
+//		this.expiration2 = expiration2;
+//	}
 
 	public String getSecret() {
 		return secret;

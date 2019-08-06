@@ -40,6 +40,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
 		.antMatchers(HttpMethod.POST, "/api/notifsystem/save/device").permitAll()
 		.antMatchers(HttpMethod.GET, "/about").permitAll()
+		.antMatchers(HttpMethod.GET, "/user/**").permitAll()
 		   // must be an admin if trying to access admin area (authentication is also required here)
 		   .antMatchers("/gallery" + "/admin/**").hasRole("ADMIN")
 		   // Any other request must be authenticated
